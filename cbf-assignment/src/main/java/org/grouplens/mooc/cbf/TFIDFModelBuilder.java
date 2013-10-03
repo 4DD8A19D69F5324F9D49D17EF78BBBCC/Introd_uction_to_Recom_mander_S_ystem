@@ -1,6 +1,8 @@
 package org.grouplens.mooc.cbf;
 
 import com.google.common.collect.Maps;
+import it.unimi.dsi.fastutil.longs.LongCollection;
+import it.unimi.dsi.fastutil.longs.LongIterator;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import org.grouplens.lenskit.core.Transient;
 import org.grouplens.lenskit.vectors.MutableSparseVector;
@@ -10,8 +12,7 @@ import org.grouplens.mooc.cbf.dao.ItemTagDAO;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Builder for computing {@linkplain TFIDFModel TF-IDF models} from item tag data.  Each item is
@@ -69,35 +70,46 @@ public class TFIDFModelBuilder implements Provider<TFIDFModel> {
             // Reset the work vector for this item's tags.
             work.clear();
             // Now the vector is empty (all keys are 'unset').
-
-            // TODO Populate the work vector with the number of times each tag is applied to this item.
-
-            // TODO Increment the document frequency vector once for each unique tag on the item.
+            Set<Long> dom=new HashSet<Long>();
+            // Populate the work vector with the number of times each tag is applied to this item.
+            for(String tag: dao.getItemTags(item)){
+                long tagid=tagIds.get(tag);
+                dom.add(tagid);
+            }
+            MutableSparseVector e=MutableSparseVector.create(dom);
+            e.fill(0);
+            work.set(e);
+            for(String tag: dao.getItemTags(item)){
+                long tagid=tagIds.get(tag);
+                work.add(tagid,1);
+            }
+            // Increment the document frequency vector once for each unique tag on the item.
+            e.fill(1);
+            docFreq.add(e);
 
             // Save a shrunk copy of the vector (only storing tags that apply to this item) in
             // our map, we'll add IDF and normalize later.
             itemVectors.put(item, work.shrinkDomain());
             // work is ready to be reset and re-used for the next item
         }
-
         // Now we've seen all the items, so we have each item's TF vector and a global vector
         // of document frequencies.
         // Invert and log the document frequency.  We can do this in-place.
         for (VectorEntry e: docFreq.fast()) {
-            // TODO Update this document frequency entry to be a log-IDF value
+            //Update this document frequency entry to be a log-IDF value
+            docFreq.set(e,Math.log(items.size())-Math.log(e.getValue()));
         }
-
         // Now docFreq is a log-IDF vector.
         // So we can use it to apply IDF to each item vector to put it in the final model.
         // Create a map to store the final model data.
         Map<Long,SparseVector> modelData = Maps.newHashMap();
         for (Map.Entry<Long,MutableSparseVector> entry: itemVectors.entrySet()) {
             MutableSparseVector tv = entry.getValue();
-            // TODO Convert this vector to a TF-IDF vector
-
-            // TODO Normalize the TF-IDF vector to be a unit vector
+            // Convert this vector to a TF-IDF vector
+            tv.multiply(docFreq);
+            // Normalize the TF-IDF vector to be a unit vector
             // HINT The method tv.norm() will give you the Euclidian length of the vector
-            
+            tv.multiply(1.0/tv.norm());
             // Store a frozen (immutable) version of the vector in the model data.
             modelData.put(entry.getKey(), tv.freeze());
         }

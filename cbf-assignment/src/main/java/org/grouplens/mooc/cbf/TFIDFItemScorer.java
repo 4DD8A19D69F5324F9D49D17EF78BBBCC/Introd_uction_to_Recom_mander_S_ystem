@@ -44,17 +44,42 @@ public class TFIDFItemScorer extends AbstractItemScorer {
     @Override
     public void score(long user, @Nonnull MutableSparseVector output) {
         // Get the user's profile, which is a vector with their 'like' for each tag
-        SparseVector userVector = makeUserVector(user);
 
+        //SparseVector userVector = makeUserVector(user);
+
+        MutableSparseVector userVector = makeUserVector(user).mutableCopy();
+        userVector.fill(0);
+        List<Rating> userRatings = dao.getEventsForUser(user,Rating.class);
+        double sumRatings=0.0;
+        double avgRatings=0.0;
+        for(Rating r:userRatings){
+            sumRatings+= r.getPreference().getValue();
+        }
+        avgRatings=sumRatings/userRatings.size();
+        for(Rating r:userRatings){
+            SparseVector iv=model.getItemVector(r.getItemId());
+            double mul=r.getPreference().getValue()-avgRatings;
+            MutableSparseVector addvec = iv.mutableCopy();
+            addvec.multiply(mul);
+            userVector.add(addvec);
+        }
+        double uvnorm = userVector.norm();
         // Loop over each item requested and score it.
         // The *domain* of the output vector is the items that we are to score.
         for (VectorEntry e: output.fast(VectorEntry.State.EITHER)) {
             // Score the item represented by 'e'.
             // Get the item vector for this item
             SparseVector iv = model.getItemVector(e.getKey());
-            // TODO Compute the cosine of this item and the user's profile, store it in the output vector
-            // TODO And remove this exception to say you've implemented it
-            throw new UnsupportedOperationException("stub implementation");
+            // Compute the cosine of this item and the user's profile, store it in the output vector
+            // And remove this exception to say you've implemented it
+            double val=0;
+            for(VectorEntry e2:iv.fast()){
+               val+=userVector.get(e2.getKey())*e2.getValue();
+            }
+            val /= iv.norm();
+            val /= uvnorm;
+            output.set(e,val);
+
         }
     }
 
@@ -79,7 +104,9 @@ public class TFIDFItemScorer extends AbstractItemScorer {
             // preferences to express the user unrating an item
             if (p != null && p.getValue() >= 3.5) {
                 // The user likes this item!
-                // TODO Get the item's vector and add it to the user's profile
+                // Get the item's vector and add it to the user's profile
+                SparseVector iv = model.getItemVector(p.getItemId());
+                profile.add(iv);
             }
         }
 
