@@ -1,0 +1,18 @@
+recommendations for user 4045:
+  63: NaN
+  98: NaN
+  187: NaN
+  272: NaN
+  36658: NaN
+recommendations for user 144:
+  38: NaN
+  141: NaN
+  153: NaN
+  194: NaN
+  9331: NaN
+recommendations for user 3855:
+  22: NaN
+  24: NaN
+  38: NaN
+  63: NaN
+  36955: NaN

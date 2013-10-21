@@ -1,0 +1,15 @@
+/home/nptwz/repos/Introduction_to_Recommander_System/cbf-assignment/src/main/java/org/grouplens/mooc/cbf/dao/RatingFile.java
+/home/nptwz/repos/Introduction_to_Recommander_System/cbf-assignment/src/main/java/org/grouplens/mooc/cbf/dao/ItemTagDAO.java
+/home/nptwz/repos/Introduction_to_Recommander_System/cbf-assignment/src/main/java/org/grouplens/mooc/cbf/dao/CSVItemTagDAO.java
+/home/nptwz/repos/Introduction_to_Recommander_System/cbf-assignment/src/main/java/org/grouplens/mooc/cbf/TFIDFModelBuilder.java
+/home/nptwz/repos/Introduction_to_Recommander_System/cbf-assignment/src/main/java/org/grouplens/mooc/cbf/dao/MOOCUserDAO.java
+/home/nptwz/repos/Introduction_to_Recommander_System/cbf-assignment/src/main/java/org/grouplens/mooc/cbf/TFIDFModel.java
+/home/nptwz/repos/Introduction_to_Recommander_System/cbf-assignment/src/main/java/org/grouplens/mooc/cbf/CBFMain.java
+/home/nptwz/repos/Introduction_to_Recommander_System/cbf-assignment/src/main/java/org/grouplens/mooc/cbf/TFIDFItemScorer.java
+/home/nptwz/repos/Introduction_to_Recommander_System/cbf-assignment/src/main/java/org/grouplens/mooc/cbf/dao/ItemTitleDAO.java
+/home/nptwz/repos/Introduction_to_Recommander_System/cbf-assignment/src/main/java/org/grouplens/mooc/cbf/dao/UserFile.java
+/home/nptwz/repos/Introduction_to_Recommander_System/cbf-assignment/src/main/java/org/grouplens/mooc/cbf/dao/TagFile.java
+/home/nptwz/repos/Introduction_to_Recommander_System/cbf-assignment/src/main/java/org/grouplens/mooc/cbf/dao/MOOCItemDAO.java
+/home/nptwz/repos/Introduction_to_Recommander_System/cbf-assignment/src/main/java/org/grouplens/mooc/cbf/dao/TitleFile.java
+/home/nptwz/repos/Introduction_to_Recommander_System/cbf-assignment/src/main/java/org/grouplens/mooc/cbf/dao/MOOCRatingDAO.java
+/home/nptwz/repos/Introduction_to_Recommander_System/cbf-assignment/src/main/java/org/grouplens/mooc/cbf/dao/UserNameDAO.java
